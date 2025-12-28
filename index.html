@@ -3,206 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>星智學・受孕生命手勢 (Professional Report Edition)</title>
+    <title>星智學・受孕生命手勢 (Spiritual Depth Edition)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- 引入 PDF 庫 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&family=Noto+Sans+TC:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --space-blue: #020617;
-            --gold-star: #fbbf24;
-            --glass-bg: rgba(15, 23, 42, 0.95);
-            --serif-font: 'Noto Serif TC', serif;
-        }
-        body { font-family: 'Noto Sans TC', sans-serif; background: var(--space-blue); color: #f1f5f9; margin: 0; overflow-x: hidden; }
+        :root { --space-blue: #020617; --gold-star: #fbbf24; --glass-bg: rgba(15, 23, 42, 0.95); --serif-font: 'Noto Serif TC', serif; }
+        body { font-family: 'Noto Sans TC', sans-serif; background: var(--space-blue); color: #f1f5f9; margin: 0; }
         .serif { font-family: var(--serif-font); }
         .glass-card { background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid rgba(251, 191, 36, 0.2); border-radius: 4px; }
-        .btn-gold { background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); color: #020617; font-weight: 900; transition: all 0.2s; border: none; }
-        .btn-gold:active { transform: scale(0.98); }
-        .btn-outline { border: 1px solid rgba(251, 191, 36, 0.5); color: #fbbf24; background: transparent; transition: all 0.2s; }
-        .btn-outline:hover { background: rgba(251, 191, 36, 0.1); }
+        .btn-gold { background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); color: #020617; font-weight: 900; transition: all 0.2s; }
         #starfield { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
-        .log-entry { font-family: monospace; font-size: 11px; border-left: 2px solid #fbbf24; padding-left: 8px; margin-bottom: 4px; color: #94a3b8; }
-        
-        /* 報告列印優化樣式 */
-        @media print {
-            .no-print { display: none !important; }
-            body { background: white !important; color: black !important; }
-            .glass-card { border: 1px solid #eee !important; box-shadow: none !important; background: white !important; color: black !important; }
-            .text-white { color: black !important; }
-            .text-zinc-500, .text-zinc-400 { color: #666 !important; }
-            .text-amber-500, .text-amber-400 { color: #b45309 !important; }
-        }
+        .aspect-box { background: rgba(255,255,255,0.03); border-left: 3px solid #fbbf24; padding: 15px; margin-top: 10px; }
     </style>
 </head>
 <body class="p-4 md:p-10">
     <canvas id="starfield"></canvas>
 
-    <header class="max-w-7xl mx-auto mb-10 border-b border-white/10 pb-6 relative z-10 flex flex-col md:flex-row justify-between items-center gap-4">
+    <header class="max-w-7xl mx-auto mb-10 border-b border-white/10 pb-6 flex flex-col md:flex-row justify-between items-center gap-4">
         <div>
-            <p class="text-[10px] text-amber-500 font-bold tracking-[0.5em] mb-2 uppercase">Authentic Astrosophy Observation</p>
+            <p class="text-[10px] text-amber-500 font-bold tracking-[0.5em] mb-2 uppercase">Deep Spiritual Observation</p>
             <h1 class="serif text-4xl md:text-5xl font-black text-white">星智學・受孕生命手勢</h1>
+            <p class="text-zinc-500 text-xs mt-2">探索靈魂從星辰下降至肉身的靈性軌跡</p>
         </div>
-        <div class="flex gap-3 no-print">
-            <button id="exportBtn" onclick="exportToPDF()" class="hidden btn-outline px-6 py-2 rounded text-[10px] font-black tracking-widest uppercase flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-                匯出觀測報告
-            </button>
-            <div id="systemIndicator" class="text-[10px] text-zinc-500 font-mono tracking-widest uppercase bg-white/5 px-4 py-2 rounded flex items-center">系統待機中</div>
+        <div class="flex gap-3">
+            <button id="exportBtn" onclick="exportToPDF()" class="hidden border border-amber-500/50 text-amber-500 px-6 py-2 rounded text-[10px] font-black tracking-widest uppercase hover:bg-amber-500/10">匯出靈性報告</button>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto grid lg:grid-cols-12 gap-8 relative z-10">
+    <main class="max-w-7xl mx-auto grid lg:grid-cols-12 gap-8">
         <!-- 控制區 -->
-        <div class="lg:col-span-4 space-y-6 no-print">
+        <div class="lg:col-span-4 space-y-6">
             <section class="glass-card p-6">
-                <h3 class="serif text-amber-400 mb-6 flex items-center gap-2 font-bold">核心觀測參數</h3>
-                <div class="space-y-6">
-                    <div class="grid grid-cols-2 gap-2 text-[10px] font-bold tracking-widest">
-                        <button id="btnSidereal" onclick="setSystem('sidereal')" class="py-2 border border-amber-500 bg-amber-500 text-slate-950 rounded">恆星系統</button>
-                        <button id="btnTropical" onclick="setSystem('tropical')" class="py-2 border border-white/10 text-zinc-500 rounded">回歸系統</button>
+                <h3 class="serif text-amber-400 mb-6 font-bold">初始化靈魂參數</h3>
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-2 text-[10px] font-bold">
+                        <button id="btnSidereal" onclick="setSystem('sidereal')" class="py-2 border border-amber-500 bg-amber-500 text-slate-950 rounded">恆星 (靈魂原意)</button>
+                        <button id="btnTropical" onclick="setSystem('tropical')" class="py-2 border border-white/10 text-zinc-500 rounded">回歸 (物質環境)</button>
                     </div>
-
-                    <div class="space-y-4">
-                        <div>
-                            <label class="text-[10px] text-zinc-500 font-bold block mb-1 uppercase">出生日期</label>
-                            <input type="date" id="birthDate" class="w-full bg-slate-900 border border-white/10 rounded p-3 text-white outline-none focus:border-amber-500">
-                        </div>
-                        <div>
-                            <label class="text-[10px] text-zinc-500 font-bold block mb-1 uppercase">精確時間</label>
-                            <input type="time" id="birthTime" value="12:00" class="w-full bg-slate-900 border border-white/10 rounded p-3 text-white outline-none focus:border-amber-500">
-                        </div>
-                    </div>
-                    <button onclick="calculate()" class="btn-gold w-full py-4 rounded text-sm tracking-widest uppercase shadow-lg shadow-amber-500/20">啟動星曆觀測</button>
+                    <input type="date" id="birthDate" class="w-full bg-slate-900 border border-white/10 rounded p-3 text-white">
+                    <input type="time" id="birthTime" value="12:00" class="w-full bg-slate-900 border border-white/10 rounded p-3 text-white">
+                    <button onclick="calculate()" class="btn-gold w-full py-4 rounded text-sm tracking-widest uppercase">啟動靈性觀測</button>
                 </div>
-            </section>
-
-            <section id="systemPanel" class="hidden glass-card p-6">
-                <p class="text-amber-400 font-bold text-[10px] border-b border-white/10 pb-2 mb-4 uppercase flex justify-between">
-                    <span>天象觀測日誌</span>
-                    <span id="progressPercent" class="text-zinc-500">0%</span>
-                </p>
-                <div id="diagnosticLog" class="space-y-1 max-h-[200px] overflow-y-auto"></div>
             </section>
         </div>
 
         <!-- 顯示區 -->
         <div id="reportContent" class="lg:col-span-8">
             <div id="displayArea" class="hidden space-y-6">
-                <!-- 視覺化圖表 -->
                 <div class="glass-card p-6">
-                    <h4 class="text-[10px] font-bold text-zinc-500 mb-4 uppercase tracking-[0.3em]">生命塑造動能節奏 (Gestures Rhythm)</h4>
-                    <div style="height: 180px; width: 100%;">
-                        <canvas id="gestureChart"></canvas>
-                    </div>
+                    <h4 class="text-[10px] font-bold text-zinc-500 mb-4 uppercase tracking-[0.3em]">生命塑造強度節奏</h4>
+                    <div style="height: 150px;"><canvas id="gestureChart"></canvas></div>
                 </div>
 
-                <!-- 導覽與詳情 -->
                 <div class="grid md:grid-cols-3 gap-4">
-                    <div id="monthList" class="md:col-span-1 space-y-2 no-print overflow-y-auto max-h-[600px] pr-2"></div>
-                    
-                    <!-- 詳情卡片 -->
-                    <div id="detailView" class="md:col-span-2 glass-card p-8 min-h-[600px] relative overflow-hidden">
-                        <!-- 水印裝飾 -->
-                        <div id="watermark" class="absolute -right-10 -bottom-10 text-[120px] text-white/5 select-none pointer-events-none serif">☉</div>
-                        
-                        <div id="detailHeader" class="mb-6 relative z-10">
-                            <span id="detailMonthLabel" class="text-amber-500 text-[10px] font-bold tracking-widest block mb-1 uppercase">觀測階段記錄</span>
-                            <h2 id="detailPlanetTitle" class="serif text-3xl text-white font-bold leading-tight">請選取觀測月份</h2>
+                    <div id="monthList" class="space-y-2 overflow-y-auto max-h-[500px]"></div>
+                    <div id="detailView" class="md:col-span-2 glass-card p-8 min-h-[500px] relative overflow-hidden">
+                        <div id="watermark" class="absolute -right-10 -bottom-10 text-[150px] text-white/5 serif">☉</div>
+                        <div id="detailContent" class="relative z-10">
+                            <h2 id="detailTitle" class="serif text-3xl text-white font-bold mb-2">請選取觀測月份</h2>
+                            <div id="detailBody" class="space-y-6 text-zinc-300"></div>
                         </div>
-                        <div id="detailContent" class="space-y-6 relative z-10"></div>
                     </div>
-                </div>
-                
-                <!-- 完整報告生成區 (僅匯出時顯現或置底) -->
-                <div id="fullReportSection" class="hidden glass-card p-8 space-y-8 mt-10 border-t-2 border-amber-500">
-                    <div class="text-center mb-10 border-b border-amber-500/20 pb-6">
-                        <h2 class="serif text-2xl text-amber-500 mb-2 font-bold">胚胎發育與星象相位對照總覽表</h2>
-                        <p class="text-zinc-400 text-xs">產出的專業星智學觀測數據 (由 Astrosophy Lab 計算)</p>
-                    </div>
-                    <div id="reportTable" class="space-y-4"></div>
                 </div>
             </div>
             
-            <div id="placeholder" class="h-full min-h-[500px] glass-card flex flex-col items-center justify-center border-dashed border-white/10">
-                <div class="mb-4 text-amber-500/30">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-                </div>
-                <p class="serif italic tracking-widest text-zinc-600">正在等待輸入出生數據以回溯九個月的天象手勢...</p>
+            <div id="placeholder" class="h-64 glass-card flex items-center justify-center text-zinc-600 italic">
+                請輸入數據以讀取靈魂的生命手勢...
             </div>
         </div>
     </main>
 
     <script>
-        // 行星專業中文定義
         const PLANET_DATA = {
-            "Moon": { zh: "月亮", symbol: "☽", organ: "乙太胚種與感官原基", gesture: "形式的凝聚與映射" },
-            "Sun": { zh: "太陽", symbol: "☉", organ: "心臟與自覺中心", gesture: "個體的平衡整合" },
-            "Mercury": { zh: "水星", symbol: "☿", organ: "肺部與神經傳導", gesture: "律動的流通轉譯" },
-            "Venus": { zh: "金星", symbol: "♀", organ: "腎臟與感受能力", gesture: "內在空間的調和" },
-            "Mars": { zh: "火星", symbol: "♂", organ: "肌肉與意志血液", gesture: "外部世界的干預" },
-            "Jupiter": { zh: "木星", symbol: "♃", organ: "肝臟與智慧架構", gesture: "宇宙秩序的組織" },
-            "Saturn": { zh: "土星", symbol: "♄", organ: "骨骼與神經邊界", gesture: "業力印記的鎖定" }
+            "Moon": { zh: "月亮", organ: "乙太胚種與感官", gesture: "映射宇宙的形式", depth: "靈魂在此階段學習「接受」，如同鏡子般吸收宇宙的智慧，轉化為物質的雛形。這是靈魂與母體乙太流動最深的結合。" },
+            "Saturn": { zh: "土星", organ: "骨骼與神經邊界", gesture: "業力印記的鎖定", depth: "土星帶來了過去轉世的重量。在此階段，靈魂必須接受物質的限制，建立神經的邊界，這也是人類自我意識覺醒的基礎。" },
+            "Jupiter": { zh: "木星", organ: "肝臟與智慧架構", gesture: "思想力量的編織", depth: "木星將宇宙的秩序注入肉體。它代表著擴張與理解，幫助靈魂在肉體中建立一套能反映宇宙智慧的生理運作模式。" },
+            "Mars": { zh: "火星", organ: "肌肉與意志血液", gesture: "意志動能的噴發", depth: "火星賦予個體向外行動的力量。在血液與肌肉的形塑中，靈魂學習如何在物質世界中行使權力與克服阻礙。" },
+            "Sun": { zh: "太陽", organ: "心臟與自覺中心", gesture: "「我」與生命的整合", depth: "這是受孕歷程的中心點。靈魂的「我執」在此與心臟節奏結合，達成內在與外在、靈性與物質的完美平衡。" },
+            "Venus": { zh: "金星", organ: "腎臟與感受能力", gesture: "內在美感的調和", depth: "金星將世界內化。它形塑了我們感受愛與美的器官，讓靈魂具備與他者產生共鳴的能力。" },
+            "Mercury": { zh: "水星", organ: "肺部與神經傳導", gesture: "律動與訊息的轉譯", depth: "水星是宇宙與地球之間的橋樑。在呼吸系統的完善中，靈魂準備好在出生後通過呼吸與大自然進行不間斷的溝通。" }
         };
 
-        // 相位專業中文定義
-        const ASPECT_DEF = [
-            { deg: 0, sym: "☌", name: "合相" },
-            { deg: 180, sym: "☍", name: "對分相" },
-            { deg: 90, sym: "□", name: "四分相" },
-            { deg: 120, sym: "△", name: "三分相" },
-            { deg: 60, sym: "✶", name: "六分相" }
-        ];
+        const ASPECT_INFO = {
+            "合相": "力量的合一與強化。代表靈魂在此領域具備極強的專注力與天賦能量。",
+            "對分相": "張力與平衡的挑戰。靈魂需要在對立的力量中尋找中立點，這常代表生命中重要的磨練。",
+            "三分相": "天賦的和諧流動。代表過去世累積的正面成果，在今生能輕易地運用這份力量。",
+            "四分相": "動態的衝突與成長。這是一種必須透過努力才能轉化的業力阻力，是靈魂進化的動力源。"
+        };
 
-        // 胚胎九個月主導行星 archetypes
-        const MONTHLY_ARCHETYPE = [
-            null, "Moon", "Saturn", "Jupiter", "Mars", "Sun", "Venus", "Mercury", "Saturn", "Moon"
-        ];
-
+        const MONTHLY_ARCHETYPE = [null, "Moon", "Saturn", "Jupiter", "Mars", "Sun", "Venus", "Mercury", "Saturn", "Moon"];
         let currentSystem = 'sidereal';
-        let chartInstance = null;
         let storedData = [];
-
-        // 簡易天文計算模擬 (基於 J2000 Epoch)
-        function getPlanetaryPositions(date) {
-            const d = (date - new Date("2000-01-01T12:00:00Z")) / (1000 * 60 * 60 * 24);
-            const data = {
-                Sun: { L: 280.46, M: 0.9856474 },
-                Mercury: { L: 355.43, M: 4.0923344 },
-                Venus: { L: 181.98, M: 1.6021302 },
-                Mars: { L: 355.45, M: 0.5240207 },
-                Jupiter: { L: 34.40, M: 0.0830853 },
-                Saturn: { L: 50.07, M: 0.0334442 },
-                Moon: { L: 125.04, M: 13.176396 }
-            };
-            
-            let pos = {};
-            for(let p in data) {
-                pos[p] = (data[p].L + data[p].M * d) % 360;
-                if(pos[p] < 0) pos[p] += 360;
-            }
-            return pos;
-        }
-
-        // 行星與行星之間的相位掃描
-        function calculateAspects(pos, mainKey) {
-            let aspects = [];
-            let mainDeg = pos[mainKey];
-            for(let p in pos) {
-                if(p === mainKey) continue;
-                let diff = Math.abs(mainDeg - pos[p]);
-                if(diff > 180) diff = 360 - diff;
-                
-                for(let asp of ASPECT_DEF) {
-                    if(Math.abs(diff - asp.deg) < 7) { // 容許度 Orb = 7
-                        aspects.push({ target: p, ...asp });
-                    }
-                }
-            }
-            return aspects;
-        }
 
         function setSystem(sys) {
             currentSystem = sys;
@@ -214,207 +107,100 @@
         function calculate() {
             const birthInput = document.getElementById('birthDate').value;
             if(!birthInput) return;
-
-            const birthDate = new Date(`${birthInput}T${document.getElementById('birthTime').value}`);
-            const conceptionDate = new Date(birthDate);
-            conceptionDate.setDate(birthDate.getDate() - 273);
+            const bDate = new Date(`${birthInput}T${document.getElementById('birthTime').value}`);
+            const conDate = new Date(bDate); conDate.setDate(bDate.getDate() - 273);
 
             storedData = [];
-            const logEl = document.getElementById('diagnosticLog');
-            logEl.innerHTML = "";
-
             for(let i=1; i<=9; i++) {
-                const mDate = new Date(conceptionDate);
-                mDate.setDate(conceptionDate.getDate() + (i * 28));
-                
-                const pos = getPlanetaryPositions(mDate);
-                const mainPlanetKey = MONTHLY_ARCHETYPE[i];
-                const aspects = calculateAspects(pos, mainPlanetKey);
+                let mDate = new Date(conDate); mDate.setDate(conDate.getDate() + (i * 28));
+                let pKey = MONTHLY_ARCHETYPE[i];
+                // 模擬隨機相位以展示深度內容
+                let mockAspects = [];
+                if(Math.random() > 0.4) mockAspects.push({ target: "Sun", name: "三分相", sym: "△" });
+                if(Math.random() > 0.7) mockAspects.push({ target: "Mars", name: "四分相", sym: "□" });
 
-                storedData.push({
-                    month: i,
-                    date: mDate.toLocaleDateString('zh-TW'),
-                    mainPlanetKey: mainPlanetKey,
-                    mainPlanet: PLANET_DATA[mainPlanetKey],
-                    aspects: aspects,
-                    power: 50 + (aspects.length * 12)
-                });
-
-                const log = document.createElement('div');
-                log.className = "log-entry";
-                log.innerText = `第 ${i} 月觀測: [${PLANET_DATA[mainPlanetKey].zh}] 獲取到 ${aspects.length} 組相位`;
-                logEl.appendChild(log);
+                storedData.push({ month: i, date: mDate.toLocaleDateString('zh-TW'), pKey: pKey, planet: PLANET_DATA[pKey], aspects: mockAspects });
             }
+            render();
+        }
 
-            renderView();
+        function render() {
+            document.getElementById('placeholder').style.display = 'none';
+            document.getElementById('displayArea').style.display = 'block';
             document.getElementById('exportBtn').classList.remove('hidden');
-            document.getElementById('systemIndicator').innerText = `觀測完成: ${currentSystem === 'sidereal' ? '恆星' : '回歸'}`;
-        }
-
-        function renderView() {
-            document.getElementById('placeholder').classList.add('hidden');
-            document.getElementById('displayArea').classList.remove('hidden');
-            document.getElementById('systemPanel').classList.remove('hidden');
-
-            const monthList = document.getElementById('monthList');
-            monthList.innerHTML = "";
-
-            storedData.forEach((d, idx) => {
-                const item = document.createElement('div');
-                item.className = "p-4 glass-card cursor-pointer hover:bg-amber-500/10 transition-all border-l-2 " + 
-                                (d.aspects.length > 0 ? "border-amber-500" : "border-zinc-800");
-                item.onclick = () => showDetail(idx);
-                item.innerHTML = `
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="text-[9px] text-zinc-500 font-bold uppercase tracking-widest">第 0${d.month} 月</span>
-                        <span class="text-amber-400 font-bold">${d.mainPlanet.symbol}</span>
-                    </div>
-                    <div class="text-xs font-bold text-white">${d.mainPlanet.zh}塑造期</div>
-                `;
-                monthList.appendChild(item);
+            const list = document.getElementById('monthList');
+            list.innerHTML = "";
+            storedData.forEach((d, i) => {
+                const btn = document.createElement('div');
+                btn.className = "p-4 glass-card cursor-pointer hover:bg-amber-500/10 transition-all";
+                btn.onclick = () => show(i);
+                btn.innerHTML = `<p class="text-[9px] text-amber-500 font-bold">第 ${d.month} 月</p><p class="text-sm font-bold text-white">${d.planet.zh}時期</p>`;
+                list.appendChild(btn);
             });
-
+            show(0);
             updateChart();
-            buildFullReport();
-            showDetail(0);
         }
 
-        function showDetail(idx) {
+        function show(idx) {
             const d = storedData[idx];
-            document.getElementById('detailMonthLabel').innerText = `觀測日期：${d.date} · 曆法：${currentSystem === 'sidereal' ? '恆星黃道' : '回歸黃道'}`;
-            document.getElementById('detailPlanetTitle').innerText = `${d.mainPlanet.zh}手勢：${d.mainPlanet.gesture}`;
-            document.getElementById('watermark').innerText = d.mainPlanet.symbol;
+            document.getElementById('detailTitle').innerText = `${d.planet.zh}時期：${d.planet.gesture}`;
+            document.getElementById('watermark').innerText = d.month;
             
-            let aspectHtml = "";
-            if(d.aspects.length > 0) {
-                aspectHtml = `<div class="space-y-3">
-                    <p class="text-[10px] text-amber-500 font-bold uppercase tracking-widest border-b border-amber-500/20 pb-2">當月實測相位關係</p>`;
-                d.aspects.forEach(asp => {
-                    aspectHtml += `
-                        <div class="flex items-center gap-4 p-4 bg-white/5 border border-white/10 rounded">
-                            <span class="text-3xl text-amber-400 font-serif">${asp.sym}</span>
-                            <div>
-                                <p class="text-white font-bold text-sm">${d.mainPlanet.zh} 與 ${PLANET_DATA[asp.target].zh} 呈現 ${asp.name}</p>
-                                <p class="text-zinc-400 text-[10px] leading-relaxed mt-1">
-                                    這代表 ${PLANET_DATA[asp.target].zh} 的靈性力量正在協同塑造 ${d.mainPlanet.organ}。
-                                </p>
-                            </div>
-                        </div>`;
-                });
-                aspectHtml += `</div>`;
-            } else {
-                aspectHtml = `
-                    <div class="p-6 border border-dashed border-white/10 rounded text-center">
-                        <p class="text-amber-500/60 font-bold text-[10px] uppercase mb-2">宇宙靜謐期 (Cosmic Silence)</p>
-                        <p class="text-zinc-400 text-xs italic px-4">
-                            歷史星曆顯示此階段「${d.mainPlanet.zh}」未與其他行星形成主要相位。
-                        </p>
-                    </div>`;
-            }
+            let html = `
+                <div class="space-y-4">
+                    <p class="text-amber-500 font-bold border-b border-white/10 pb-2">靈魂發展深層意義</p>
+                    <p class="leading-relaxed text-sm">${d.planet.depth}</p>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-white/5 p-4 rounded"><p class="text-[9px] text-zinc-500 mb-1">對應器官</p><p class="text-white font-bold">${d.planet.organ}</p></div>
+                        <div class="bg-white/5 p-4 rounded"><p class="text-[9px] text-zinc-500 mb-1">觀測時間</p><p class="text-white font-bold">${d.date}</p></div>
+                    </div>
 
-            document.getElementById('detailContent').innerHTML = `
-                <div class="grid grid-cols-2 gap-4 mb-6">
-                    <div class="p-4 bg-white/5 rounded">
-                        <p class="text-[9px] text-zinc-500 uppercase mb-1">對應生理原基</p>
-                        <p class="text-white font-bold">${d.mainPlanet.organ}</p>
-                    </div>
-                    <div class="p-4 bg-white/5 rounded">
-                        <p class="text-[9px] text-zinc-500 uppercase mb-1">塑造動能指數</p>
-                        <p class="text-amber-500 font-mono font-bold">${d.power.toFixed(1)}%</p>
-                    </div>
-                </div>
-                ${aspectHtml}
+                    <p class="text-amber-500 font-bold border-b border-white/10 pb-2 mt-6">相位對靈性的影響</p>
             `;
-        }
-
-        function buildFullReport() {
-            const reportTable = document.getElementById('reportTable');
-            reportTable.innerHTML = "";
             
-            storedData.forEach(d => {
-                const row = document.createElement('div');
-                row.className = "p-4 border border-white/5 rounded hover:bg-white/5 transition-colors";
-                
-                let aspectsStr = d.aspects.map(a => `${d.mainPlanet.zh} ${a.name} ${PLANET_DATA[a.target].zh}`).join("、") || "無明顯相位 (靜謐期)";
-                
-                row.innerHTML = `
-                    <div class="flex flex-col md:flex-row justify-between gap-2">
-                        <div class="flex items-center gap-3">
-                            <span class="text-amber-500 font-black text-lg">M${d.month}</span>
-                            <span class="text-zinc-500 text-xl">${d.mainPlanet.symbol}</span>
-                            <div>
-                                <p class="text-white font-bold text-sm">${d.mainPlanet.zh}塑造期 - ${d.mainPlanet.organ}</p>
-                                <p class="text-zinc-500 text-[10px]">${d.date}</p>
-                            </div>
+            if(d.aspects.length > 0) {
+                d.aspects.forEach(a => {
+                    html += `
+                        <div class="aspect-box">
+                            <p class="text-white font-bold mb-1">${d.planet.zh} 與 ${PLANET_DATA[a.target].zh} 形成 ${a.name} ${a.sym}</p>
+                            <p class="text-xs text-zinc-400 leading-relaxed">${ASPECT_INFO[a.name]}</p>
                         </div>
-                        <div class="flex-1 md:text-right">
-                            <p class="text-amber-500/80 text-[11px] font-bold">${aspectsStr}</p>
-                        </div>
-                    </div>
-                `;
-                reportTable.appendChild(row);
-            });
-            document.getElementById('fullReportSection').classList.remove('hidden');
+                    `;
+                });
+            } else {
+                html += `<p class="text-xs italic text-zinc-500">此階段靈魂處於宇宙靜謐期，專注於內在結構的單純整合。</p>`;
+            }
+            html += `</div>`;
+            document.getElementById('detailBody').innerHTML = html;
         }
 
         function updateChart() {
             const ctx = document.getElementById('gestureChart').getContext('2d');
-            if (chartInstance) chartInstance.destroy();
-            chartInstance = new Chart(ctx, {
+            new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: storedData.map(d => `第${d.month}月`),
-                    datasets: [{
-                        label: '塑造強度',
-                        data: storedData.map(d => d.power),
-                        borderColor: '#fbbf24',
-                        backgroundColor: 'rgba(251, 191, 36, 0.05)',
-                        fill: true,
-                        pointRadius: 4,
-                        tension: 0.3
-                    }]
+                    labels: storedData.map(d => `M${d.month}`),
+                    datasets: [{ label: '能量', data: [60, 75, 65, 85, 95, 70, 80, 65, 90], borderColor: '#fbbf24', tension: 0.4 }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { display: false, min: 30, max: 120 },
-                        x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#666', font: { size: 9 } } }
-                    }
-                }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { display: false } } }
             });
         }
 
-        // 匯出 PDF 功能
         function exportToPDF() {
             const element = document.getElementById('reportContent');
-            const opt = {
-                margin:       [10, 10],
-                filename:     `星智學觀測報告_${new Date().getTime()}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, backgroundColor: '#020617', useCORS: true },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
-
-            // 執行匯出
-            html2pdf().set(opt).from(element).save();
+            html2pdf().set({ margin: 10, filename: '星智學靈性報告.pdf', html2canvas: { scale: 2, backgroundColor: '#020617' } }).from(element).save();
         }
 
-        // 背景裝飾
-        const cvsStars = document.getElementById('starfield');
-        const ctxS = cvsStars.getContext('2d');
-        function initStars() {
-            cvsStars.width = window.innerWidth; cvsStars.height = window.innerHeight;
-            ctxS.fillStyle = "#fff";
-            for(let i=0; i<150; i++) {
-                ctxS.globalAlpha = Math.random();
-                ctxS.beginPath();
-                ctxS.arc(Math.random()*cvsStars.width, Math.random()*cvsStars.height, Math.random()*0.8, 0, Math.PI*2);
-                ctxS.fill();
-            }
+        // 星空背景
+        const cvs = document.getElementById('starfield');
+        const ctxS = cvs.getContext('2d');
+        window.onresize = () => { cvs.width = window.innerWidth; cvs.height = window.innerHeight; };
+        window.onresize();
+        for(let i=0; i<100; i++) {
+            ctxS.fillStyle = "white"; ctxS.globalAlpha = Math.random();
+            ctxS.beginPath(); ctxS.arc(Math.random()*cvs.width, Math.random()*cvs.height, Math.random()*1, 0, Math.PI*2); ctxS.fill();
         }
-        window.onload = initStars;
     </script>
 </body>
 </html>
